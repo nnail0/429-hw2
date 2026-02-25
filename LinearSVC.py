@@ -32,22 +32,28 @@ class LinearSVC:
         rand_gen = np.random.RandomState(self.random_state)
         self.w_ = rand_gen.normal(loc = 0.0, scale = 0.01, size = 1 + m)
 
-        self.losses_ = []
+        self.errors_ = []
 
         for _ in range(self.n_iter):
             # get the input
-            indiv_loss = []
+            indiv_losses = []
+            epoch_error = 0
             for x_i, target in zip(X, y):
                 # compute individual hinge losses
                 loss = np.max(0, 1 - (x_i * target))
+                if loss != 0:
+                    epoch_error += 1
             
+            self.errors_.append(epoch_error)
+
+            # calculate what is inside the sum term. 
             sum = 0
             for i in range(n):
-                sum += indiv_loss[i] + (0.5 * np.dot(self.w_, self.w_))
+                sum += indiv_losses[i] + (0.5 * np.dot(self.w_, self.w_))
 
             total_loss = C * (1 / n) * sum
             self.losses_.append(total_loss)
-            self.w_ += self.eta * 
+            self.w_ += self.eta * total_loss
             
 
 
