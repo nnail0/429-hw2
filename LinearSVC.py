@@ -24,7 +24,7 @@ class LinearSVC:
     *then* after performing it for all samples, doing eta * this sum
     """
 
-    def fit(self, X, y, C):
+    def fit(self, X, y, C = 0.1):
 
         # absorb the bias
         n = X.shape[0] #number of samples
