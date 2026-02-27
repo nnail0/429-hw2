@@ -27,10 +27,10 @@ dg1 = DataGenerator(100)
 sets = []
 errors = []
 
-my_svc = mySVC(0.01, 100, 1)
+my_svc = mySVC(0.001, 50, 1)
 
 def plot_losses(loss_values : list):
-    x_vals = np.linspace(0, 99, 100)
+    x_vals = np.linspace(0, 49, 50)
     plot = plt.plot()
     plt.scatter(x = x_vals, y = loss_values)
     plt.show()
@@ -48,11 +48,8 @@ for dims, samples in itertools.product(n_dims, n_samples):
     errors.append(my_svc.losses_)
 
 
-plot_losses(errors[0])
-
-
-
-    
+for l in errors:
+    plot_losses(l)
 
 
 
