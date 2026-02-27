@@ -33,7 +33,7 @@ class LinearSVC:
         X = np.hstack((x_0,X))
 
         rand_gen = np.random.RandomState(self.random_state)
-        self.w_ = rand_gen.normal(loc = 0.0, scale = 0.01, size = 1 + m)
+        self.w_ = rand_gen.normal(loc = 0.0, scale = 0.001, size = 1 + m)
 
         self.losses_ = []    # this is for objective, not gradient
 
@@ -56,7 +56,7 @@ class LinearSVC:
             total_loss = (1/2) * np.dot(self.w_, self.w_) + (C / n) * sum(epoch_loss)
             self.losses_.append(total_loss)
 
-            grad_loss = self.w_ + (C / n) * grad_losses
+            grad_loss = self.w_ * C * grad_losses / n
 
             # multiply by 1/n times the gradient
             self.w_ -= self.eta * grad_loss
@@ -84,11 +84,13 @@ def main():
         elif y_iris[i] == "Iris-versicolor":
             y_iris[i] = int(-1)
 
+    y_iris = y_iris.astype(int)
+
     print("Y_iris: ", y_iris)
 
 
-    svc1 = LinearSVC(eta = 0.001, n_iter= 3000)
-    svc1.fit(X_iris, y_iris, 1)
+    svc1 = LinearSVC(eta = 0.01, n_iter= 50)
+    svc1.fit(X_iris, y_iris, 0.1)
     print("svc1 fit results: ", svc1.w_)
 
     plot1 = plt.plot()
