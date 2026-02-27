@@ -159,4 +159,7 @@ lass DataGenerator:
 
 Task 2 has us implement a generator that produces linearly seperable sets of data using knowledge from linear algebra. To demonstrate the efficacy of the code, we can set the number of dimensions to 2 with 100 data points. 
 
+![Scatter plot of linearly seperable data.](image.png)
+
+With seed 100 on this specific RNG, we can see a clear split between two clouds of data. This data would make for a clean seed on which to train a model. 
 
