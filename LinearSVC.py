@@ -9,6 +9,7 @@ start with an initial separation strip?
 
 import numpy as np 
 import pandas as pd
+from matplotlib import pyplot as plt
 
 class LinearSVC:
 
@@ -42,24 +43,25 @@ class LinearSVC:
             grad_losses = 0    
             for x_i, target in zip(X, y):
                 # compute individual hinge losses
-                output = self.predict(x_i)
-
-                init_hinge_loss = np.max(0, 1 - (target * output))
+                
+                init_hinge_loss = max(0, 1 - (target * self.net_input(x_i)))
                 epoch_loss.append(init_hinge_loss)
 
-                grad_hinge_loss = (-(output) * target) * x_i
-                grad_losses += grad_hinge_loss
-            
-            # calculate what is inside the sum term. 
-            sum = 0
-            for i in range(n):
-                sum += epoch_loss[i] * (1/2) * np.dot(self.w_, self.w_)
+                # grad_hinge_loss = (-(output) * target) * x_i
+                # grad_losses += grad_hinge_loss
+                if target * self.net_input(x_i) < 1:
+                    grad_losses += -target * x_i
 
-            total_loss = (C / n) * sum
+            # compute non-grad loss for convergence
+            total_loss = (1/2) * np.dot(self.w_, self.w_) + (C / n) * sum(epoch_loss)
             self.losses_.append(total_loss)
 
+            grad_loss = self.w_ + (C / n) * grad_losses
+
             # multiply by 1/n times the gradient
-            self.w_ += (1 / n) * self.eta * grad_losses
+            self.w_ -= self.eta * grad_loss
+        
+        print("Model fit complete")
             
 
     def net_input(self, X):
@@ -72,18 +74,32 @@ class LinearSVC:
 
 def main():
     data = pd.read_csv("data/iris.data")
-    X_iris = data.iloc[0:100, 0:3].to_numpy()
-    y_iris = data.iloc[0:100, 4].to_numpy()
+    X_iris = data.iloc[0:99, 2:4].to_numpy()
+    print("X_iris: ", X_iris)
+    y_iris = data.iloc[0:99, 4].to_numpy()
 
     for i in range(y_iris.size):
         if y_iris[i] == "Iris-setosa":
-            y_iris[i] = int(-1)
-        elif y_iris[i] == "Iris-versicolor":
             y_iris[i] = int(1)
+        elif y_iris[i] == "Iris-versicolor":
+            y_iris[i] = int(-1)
+
+    print("Y_iris: ", y_iris)
 
 
-    svc1 = LinearSVC(0.01, 50, 1)
+    svc1 = LinearSVC(eta = 0.001, n_iter= 3000)
     svc1.fit(X_iris, y_iris, 1)
+    print("svc1 fit results: ", svc1.w_)
+
+    plot1 = plt.plot()
+    plt.scatter(X_iris[:, 0], X_iris[:, 1])
+
+    x_vals = np.linspace(min(X_iris[:,0]), max(X_iris[:,0]), 100)
+    y_vals = -(svc1.w_[1] * x_vals + svc1.w_[0]) / svc1.w_[2]
+
+    plt.plot(x_vals, y_vals)
+    plt.show()
+
 
 if __name__ == "__main__":
     main()
