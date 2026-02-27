@@ -22,6 +22,7 @@ class DataGenerator:
         # part b: generate n random samples of size d. 
         for i in range(n_samples):
             matrix_x[i] = random_state.normal(loc = center, scale = u_range, size = n_dims)
+            # matrix_x[i] = random_state.uniform(-u_range, u_range, n_dims)
 
         #print("matrix x: \n", matrix_x)
 
@@ -41,8 +42,8 @@ class DataGenerator:
 
 
 def __main__():
-    gen = DataGenerator()
-    result = gen.generate(n_dims = 1, center= 0, u_range= 1)
+    gen = DataGenerator(800)
+    result = gen.generate(n_dims = 2, center= 0, u_range= 1)
 
     plot1 = plt.plot()
     plt.scatter(x = result[:, 0], y = result[:, 1])
