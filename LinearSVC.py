@@ -51,12 +51,13 @@ class LinearSVC:
                 # grad_losses += grad_hinge_loss
                 if target * self.net_input(x_i) < 1:
                     grad_losses += -target * x_i
+                # else it is 0. 
 
             # compute non-grad loss for convergence
             total_loss = (1/2) * np.dot(self.w_, self.w_) + (C / n) * sum(epoch_loss)
             self.losses_.append(total_loss)
 
-            grad_loss = self.w_ * C * grad_losses / n
+            grad_loss = self.w_ + (C / n) * grad_losses 
 
             # multiply by 1/n times the gradient
             self.w_ -= self.eta * grad_loss
