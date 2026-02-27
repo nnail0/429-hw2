@@ -42,7 +42,7 @@ class DataGenerator:
 
 
 def __main__():
-    gen = DataGenerator(800)
+    gen = DataGenerator(100)
     result = gen.generate(n_dims = 2, center= 0, u_range= 1)
 
     plot1 = plt.plot()
