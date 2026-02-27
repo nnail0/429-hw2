@@ -5,7 +5,7 @@ from sklearn.svm import LinearSVC as skSVC
 import time
 import numpy as np
 import pandas as pd
-import os
+import csv
 
 from matplotlib import pyplot as plt 
 
@@ -40,8 +40,11 @@ def plot_losses(loss_values : list):
 for dims, samples in itertools.product(n_dims, n_samples):
     print(dims, samples)
     data = dg1.generate(samples, dims, 0, u_range = 10)
-    file_name = str(dims) + "d_" + str(samples) + "n.data"
-    data.tofile("data/" + file_name)
+    file_name = str(dims) + "d_" + str(samples) + "n.csv"
+    with open(file_name, mode = "w", newline = '') as f:
+        writer = csv.writer(f)
+        writer.writerows(data)
+
     X_data = data[:, 0:dims - 1]
     y_data = data[:, dims - 1]
     fit_start = time.clock_gettime(5)
