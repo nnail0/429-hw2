@@ -330,49 +330,49 @@ print(table)
 
 
     
-![png](output_14_1.png)
+![png](images/output_14_1.png)
     
 
 
 
     
-![png](output_14_2.png)
+![png](images/output_14_2.png)
     
 
 
 
     
-![png](output_14_3.png)
+![png](images/output_14_3.png)
     
 
 
 
     
-![png](output_14_4.png)
+![png](images/output_14_4.png)
     
 
 
 
     
-![png](output_14_5.png)
+![png](images/output_14_5.png)
     
 
 
 
     
-![png](output_14_6.png)
+![png](images/output_14_6.png)
     
 
 
 
     
-![png](output_14_7.png)
+![png](images/output_14_7.png)
     
 
 
 
     
-![png](output_14_8.png)
+![png](images/output_14_8.png)
     
 
 
@@ -510,7 +510,7 @@ plt.show()
 
 
     
-![png](output_17_1.png)
+![png](images/output_17_1.png)
     
 
 
