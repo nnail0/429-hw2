@@ -242,7 +242,7 @@ for idx, cl in enumerate(np.unique(Y_train)):
 
 
     
-![png](output_10_0.png)
+![png](images/output_10_0.png)
     
 
 
@@ -270,7 +270,7 @@ plt.show()
 
 
     
-![png](output_12_0.png)
+![png](images/output_12_0.png)
     
 
 
@@ -324,7 +324,7 @@ print(table)
 
 
     
-![png](output_14_0.png)
+![png](images/output_14_0.png)
     
 
 
