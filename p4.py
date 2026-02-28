@@ -39,33 +39,32 @@ for name in filenames:
     else:
         test_filenames.append(name)
 
-my_svc = mySVC(eta = 0.001, n_iter = 50, random_state=100)
-sk_primal = skSVC(loss = "hinge", dual = False)
-sk_dual = skSVC(loss = "hinge", dual = True)
+my_svc = mySVC(eta = 0.001, n_iter = 100, random_state=100)
 
 models = {"my_svc" : [], "sk_primal" : [], "sk_dual" : []}
 
 def fit_sklearn_model(X_, y_, n_iter_, dual_ : bool):
+    print("running sklearn svc, dual = ", dual_)
+    losses = []
     for i in range(1, n_iter_ + 1):
-        model = skSVC(loss = "hinge", dual = dual_)
-        model.fit(X = X_, y = y_, n_iter = i)
+        model = skSVC(loss = "squared_hinge", dual = dual_, C = 0.001)
+        model.n_iter_ = n_iter_
+        model.fit(X = X_, y = y_)
 
         result = model.predict(X_)
         accuracy = model.score(X_, y_)
 
-        if dual_ == False:
-            models.get("sk_primal").append(accuracy)
-        else:
-            models.get("sk_dual").append(accuracy)
+        losses.append(accuracy)
+        return losses
 
 train_datasets = []
 test_datasets = []
 for name in train_filenames:
-    train_data = np.genfromtxt(name, delimiter=',')
+    train_data = np.genfromtxt("data/" + name, delimiter=',')
     train_datasets.append(train_data)
 
 for name in test_filenames:
-    test_data = np.genfromtxt(name, delimiter = ",")
+    test_data = np.genfromtxt("data/" + name, delimiter = ",")
     test_datasets.append(test_data)
 
 for model in models.keys():
@@ -77,17 +76,16 @@ for model in models.keys():
         X_data = data[:, 0:n_dims - 1]
         y_data = data[:, n_dims - 1]
         fit_start = time.clock_gettime(5)
-
         
         if model == "my_svc":
-            mySVC.fit(X_data, y_data)
-            models.get(model).update({"my_svc": model.errors_})
+            my_svc.fit(X = X_data, y = y_data, C = 0.001)
+            models.update({"my_svc": my_svc.losses_})
         elif model == "sk_primal":
-            result = fit_sklearn_model(X_data, y_data, n_iter = 50, dual = False)
-            models.get(model).update({"sk_primal" : result})
+            result = fit_sklearn_model(X_data, y_data, n_iter_ = 100, dual_ = False)
+            models.update({"sk_primal" : result})
         elif model == "sk_dual":
-            result = fit_sklearn_model(X_data, y_data, n_iter = 50, dual = True)
-            models.get(model).update({"sk_dual" : result})
+            result = fit_sklearn_model(X_data, y_data, n_iter_ = 1000, dual_ = True)
+            models.update({"sk_dual" : result})
 
         fit_end = time.clock_gettime(5)
         print("%d dims, %d samples: %f" % (n_dims, n_samples, fit_end - fit_start))

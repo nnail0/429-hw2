@@ -39,8 +39,10 @@ class DataGenerator:
             else :
                 labels[i] = 1
 
-        result = np.append(X_train, labels, axis=1)
-        # print(X_train)
+
+        print(np.shape(X_train))
+        X_train = np.append(X_train, labels, axis=1)
+        print(np.shape(X_train))
         # print(X_test)
         return (X_train, X_test)
 
