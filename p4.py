@@ -43,19 +43,22 @@ my_svc = mySVC(eta = 0.001, n_iter = 100, random_state=100)
 
 models = {"my_svc" : [], "sk_primal" : [], "sk_dual" : []}
 
-def fit_sklearn_model(X_, y_, n_iter_, dual_ : bool):
+def fit_sklearn_model(X_, y_, n = 100, dual_ = False):
     print("running sklearn svc, dual = ", dual_)
     losses = []
-    for i in range(1, n_iter_ + 1):
-        model = skSVC(loss = "squared_hinge", dual = dual_, C = 0.001)
-        model.n_iter_ = n_iter_
+    print("n_iter: ", n)
+    for i in range(1, n + 1):
+        # print("i = ", i)
+        model = skSVC(loss = "squared_hinge", dual = dual_, C = 0.001, max_iter=i)
+        model.n_iter_ = i
         model.fit(X = X_, y = y_)
 
-        result = model.predict(X_)
+        # result = model.predict(X_)
         accuracy = model.score(X_, y_)
+        # print("accuracy: ", accuracy)
 
-        losses.append(accuracy)
-        return losses
+        losses.append(1 - accuracy)
+    return losses
 
 train_datasets = []
 test_datasets = []
@@ -81,13 +84,14 @@ for model in models.keys():
             my_svc.fit(X = X_data, y = y_data, C = 0.001)
             models.update({"my_svc": my_svc.losses_})
         elif model == "sk_primal":
-            result = fit_sklearn_model(X_data, y_data, n_iter_ = 100, dual_ = False)
+            result = fit_sklearn_model(X_data, y_data, n = 20000, dual_ = False)
             models.update({"sk_primal" : result})
         elif model == "sk_dual":
-            result = fit_sklearn_model(X_data, y_data, n_iter_ = 1000, dual_ = True)
+            result = fit_sklearn_model(X_data, y_data, n = 20000, dual_ = True)
             models.update({"sk_dual" : result})
 
         fit_end = time.clock_gettime(5)
         print("%d dims, %d samples: %f" % (n_dims, n_samples, fit_end - fit_start))
+        print()
         # end_weight = my_svc.w_
 
