@@ -26,27 +26,36 @@ class DataGenerator:
 
         #print("matrix x: \n", matrix_x)
 
-        # part c: label the data. 
-        labels = np.ndarray((n_samples, 1))
-        for i in range(n_samples):
-            result = array_a.T.dot(matrix_x[i])    
+        split_idx = int(np.ceil(n_samples * 0.7))
+        X_train = matrix_x[0:split_idx, :]
+        X_test = matrix_x[split_idx:, :]
+
+        # part c: label the training data. 
+        labels = np.ndarray((X_train.shape[0], 1))
+        for i in range(split_idx):
+            result = array_a.T.dot(X_train[i])    
             if result < 0:
                 labels[i] = -1
             else :
                 labels[i] = 1
 
-        print("shape of x: ", np.shape(matrix_x),  ", shape of labels: ", np.shape(labels))
-        result = np.append(matrix_x, labels, axis=1)
-        # print(result)
-        return result
+        
+
+
+        result = np.append(X_train, labels, axis=1)
+        print(X_train)
+        print(X_test)
+        return (X_train, X_test)
 
 
 def __main__():
     gen = DataGenerator(100)
-    result = gen.generate(n_dims = 2, center= 0, u_range= 1)
+    result_tuple = gen.generate(n_dims = 2, center= 0, u_range= 1)
+    train = result_tuple[0]
+    test = result_tuple[1]
 
     plot1 = plt.plot()
-    plt.scatter(x = result[:, 0], y = result[:, 1])
+    plt.scatter(x = train[:, 0], y = train[:, 1])
     plt.show()
     
         
