@@ -40,13 +40,17 @@ def plot_losses(loss_values : list):
 for dims, samples in itertools.product(n_dims, n_samples):
     print(dims, samples)
     data = dg1.generate(samples, dims, 0, u_range = 10)
-    file_name = str(dims) + "d_" + str(samples) + "n.csv"
-    with open(file_name, mode = "w", newline = '') as f:
+    train_name = str(dims) + "d_" + str(samples) + "n_train.csv"
+    test_name = str(dims) + "d_" + str(samples) + "n_test.csv"
+    with open("data/" + train_name, mode = "w", newline = '') as f:
         writer = csv.writer(f)
-        writer.writerows(data)
+        writer.writerows(data[0])
+    with open("data/" + test_name, mode = "w", newline = '') as f:
+        writer = csv.writer(f)
+        writer.writerows(data[1])
 
-    X_data = data[:, 0:dims - 1]
-    y_data = data[:, dims - 1]
+    X_data = (data[0])[:, 0:dims - 1]
+    y_data = (data[0])[:, dims - 1]
     fit_start = time.clock_gettime(5)
     my_svc.fit(X_data, y_data, 0.1)
     fit_end = time.clock_gettime(5)
